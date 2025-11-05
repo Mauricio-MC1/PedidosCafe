@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Cafés</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            position: relative; /* Para posicionar el icono del carrito */
+        }
+        .salas {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .sala {
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .sala:hover {
+            background-color: #45a049;
+        }
+        .formulario, .resumen {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            text-align: center;
+            width: 90%; /* Ajusta para parecerse a una app móvil */
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px 0;
+        }
+        .counter span {
+            margin: 0 10px;
+            font-size: 1.5em;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        img {
+            width: 50px;
+            height: auto;
+        }
+        #carrito {
+            margin-top: 20px;
+        }
+        #carrito ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #carrito li {
+            margin: 5px 0;
+        }
+        .carrito-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            padding: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        .carrito-count {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Selecciona una Sala</h1>
+    <div class="salas" id="salas">
+        <div class="sala" onclick="abrirFormulario(1, 'Capacitaciones')">Capacitaciones</div>
+        <div class="sala" onclick="abrirFormulario(2, 'Directorio P5')">Directorio P5</div>
+        <div class="sala" onclick="abrirFormulario(3, 'Tesla P4')">Tesla P4</div>
+        <div class="sala" onclick="abrirFormulario(4, 'Darwin P4')">Darwin P4</div>
+        <div class="sala" onclick="abrirFormulario(5, 'Volta P4')">Volta P4</div>
+        <div class="sala" onclick="abrirFormulario(6, 'Einstein P5')">Einstein P5</div>
+<div class="sala" onclick="abrirFormulario(7, 'Da Vinci P5')">Da Vinci P5</div>
+        <div class="sala" onclick="abrirFormulario(8, 'Newton P5')">Newton P5</div>
+<div class="sala" onclick="abrirFormulario(9, 'Cooper PB')">Cooper PB</div>
+    </div>
+
+    <div class="carrito-icon" id="carritoIcon" onclick="toggleCarrito()">
+        <i class="fas fa-shopping-cart"></i>
+        <div id="carritoCount" class="carrito-count">0</div>
+    </div>
+
+    <div class="formulario" id="formulario">
+        <h2 id="mensajeSala"></h2>
+        
+       <table>
+    <tr>
+        <th>Imagen</th>
+        <th>Pedido</th>
+        <th>Cantidad de Azúcar</th>
+        <th>Acciones</th>
+    </tr>
+
+ <tr>
+        <td><img src="https://cdn.pixabay.com/photo/2019/10/15/17/26/tea-4552398_1280.png" alt="Te"></td>
+        <td>Te</td>
+        <td>
+            <div class="counter">
+                <button class="btn" onclick="cambiarAzucar('Te', -1)">-</button>
+                <span id="azucarTe">0</span>
+                <button class="btn" onclick="cambiarAzucar('Te', 1)">+</button>
+            </div>
+        </td>
+        <td>
+            <button class="btn" onclick="agregarAlCarrito('Te')">Agregar</button>
+        </td>
+    </tr>
+    
+    <tr>
+        <td><img src="https://cdn.pixabay.com/photo/2024/04/09/19/31/ai-generated-8686673_1280.jpg" alt="Cafe"></td>
+        <td>Cafe</td>
+        <td>
+            <div class="counter">
+                <button class="btn" onclick="cambiarAzucar('Cafe', -1)">-</button>
+                <span id="azucarCafe">0</span>
+                <button class="btn" onclick="cambiarAzucar('Cafe', 1)">+</button>
+            </div>
+        </td>
+        <td>
+            <button class="btn" onclick="agregarAlCarrito('Cafe')">Agregar</button>
+        </td>
+    </tr>
+
+<tr>
+        <td><img src="https://cdn.pixabay.com/photo/2016/03/14/19/33/water-1256127_1280.jpg" alt="Agua"></td>
+        <td>Agua</td>
+        <td></td>
+        <td>
+            <button class="btn" onclick="agregarAlCarrito('Agua')">Agregar</button>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="https://media.istockphoto.com/id/1030882758/photo/espresso-coffee-and-machine.webp?s=2048x2048&w=is&k=20&c=w4fWcL_xP2ATAFE7JOHa-m_Xh-7Kn0W8l1goVtZplsI=" alt="Expreso"></td>
+        <td>Expreso</td>
+        <td></td>
+        <td>
+            <button class="btn" onclick="agregarAlCarrito('Expreso')">Agregar</button>
+        </td>
+    </tr>
+   
+</table>
+
+        <br>
+        <button class="btn" onclick="realizarPedido()">Realizar Pedido</button>
+        <button class="btn" onclick="regresar()">Regresar</button>
+    </div>
+
+    <div class="resumen" id="resumen">
+        <h3>Resumen de Tu Pedido</h3>
+        <ul id="resumenLista"></ul>
+        <p>Selecciona a quién enviar el pedido:</p>
+        <button class="btn" onclick="enviarPedido('hector')">Enviar a Hector</button>
+        <button class="btn" onclick="enviarPedido('rosita')">Enviar a Rosita</button>
+        <button class="btn" onclick="volverASeleccion()">Volver a Seleccionar Cafés</button>
+    </div>
+
+    <script>
+        let salaSeleccionada = null;
+        let nombreSalaSeleccionada = '';
+        let carrito = [];
+
+        function abrirFormulario(sala, nombreSala) {
+            salaSeleccionada = sala;
+            nombreSalaSeleccionada = nombreSala;
+            document.getElementById("salas").style.display = "none";
+            document.getElementById("formulario").style.display = "block";
+            document.getElementById("mensajeSala").textContent = `Estás en la sala "${nombreSalaSeleccionada}".`;
+        }
+
+        // Cambia la cantidad de azúcar
+        function cambiarAzucar(tipoCafe, delta) {
+            const azucarTexto = document.getElementById(`azucar${tipoCafe}`).textContent;
+            let cantidadAzucar = parseInt(azucarTexto);
+            cantidadAzucar = Math.max(0, cantidadAzucar + delta);
+            document.getElementById(`azucar${tipoCafe}`).textContent = cantidadAzucar;
+        }
+
+        // Agrega un producto al carrito
+        function agregarAlCarrito(tipoCafe) {
+    let azucarCantidad = 0;
+    // Solo Café y Té tienen azúcar
+    if (tipoCafe === 'Cafe' || tipoCafe === 'Te') {
+        azucarCantidad = parseInt(document.getElementById(`azucar${tipoCafe}`).textContent);
+        if (azucarCantidad < 0) {
+            alert('La cantidad de azúcar no puede ser negativa.');
+            return;
+        }
+        // Reiniciar el contador de azúcar a 0
+        document.getElementById(`azucar${tipoCafe}`).textContent = '0';
+    }
+    carrito.push({ tipoCafe, azucar: azucarCantidad });
+    actualizaContadorCarrito();
+}
+
+        // Actualiza el contador de cafés en el carrito
+        function actualizaContadorCarrito() {
+            const carritoCount = document.getElementById("carritoCount");
+            carritoCount.textContent = carrito.length;
+        }
+
+        // Realiza el pedido y muestra el resumen
+       function toggleCarrito() {
+    if (carrito.length === 0) {
+        alert('Tu carrito está vacío. Agrega al menos un producto.');
+        return;
+    }
+
+    // Concatenar el nombre de la sala al título
+    document.querySelector("#resumen h3").textContent = `Resumen de Tu Pedido para la Sala: ${nombreSalaSeleccionada}`;
+
+    document.getElementById("formulario").style.display = "none";
+    document.getElementById("resumen").style.display = "block";
+
+    const resumenLista = document.getElementById("resumenLista");
+    resumenLista.innerHTML = "";
+    carrito.forEach(item => {
+        const li = document.createElement("li");
+        if (item.tipoCafe === 'Cafe' || item.tipoCafe === 'Te') {
+            li.textContent = `${item.tipoCafe} con ${item.azucar} cucharada(s) de azúcar.`;
+        } else {
+            li.textContent = `${item.tipoCafe}`;
+        }
+        resumenLista.appendChild(li);
+    });
+}
+        // Envía el pedido según el destinatario
+        function enviarPedido(destinatario) {
+            let numero = '';
+            if (destinatario === 'hector') {
+                numero = '+593995977145'; // Número de Whatsapp de Hector
+            } else if (destinatario === 'rosita') {
+                numero = '+593994044700'; // Número de Whatsapp de Rosita
+            }
+
+            let mensaje = `Hola, necesito los siguientes cafés para la sala "${nombreSalaSeleccionada}":\n`;
+            carrito.forEach(item => {
+                mensaje += `${item.tipoCafe} con ${item.azucar} cucharada(s) de azúcar.\n`;
+            });
+
+            const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+
+            // Limpiar carrito después de enviar el pedido
+            carrito = [];
+            document.getElementById("resumenLista").innerHTML = ""; // Limpiar la lista del resumen
+            actualizaContadorCarrito(); // Actualizar contador de carrito
+            document.getElementById("resumen").style.display = "none"; // Ocultar resumen
+        }
+
+        function volverASeleccion() {
+            // Ocultar resumen y mostrar el formulario de selección de cafés
+            document.getElementById("resumen").style.display = "none";
+            document.getElementById("formulario").style.display = "block"; // Mostrar el formulario
+        }
+
+        function regresar() {
+            document.getElementById("formulario").style.display = "none";
+            document.getElementById("salas").style.display = "grid"; // Mostrar las salas
+            carrito = []; // Limpiar carrito
+            actualizaContadorCarrito(); // Actualizar contador de carrito
+        }
+    </script>
+
+</body>
+</html>
